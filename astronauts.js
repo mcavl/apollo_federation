@@ -20,14 +20,19 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Query: {
-    astronaut(_, { id }) {
-      return fetch(`${apiUrl}/astronauts/${id}`).then(res => res.json());
+    Astronaut: {
+        __resolveReference(referenceObject) {
+            return fetch(`${apiUrl}/astronauts/${referenceObject.id}`).then(response => response.json());
+        }
     },
-    astronauts() {
-      return fetch(`${apiUrl}/astronauts`).then(res => res.json());
+    Query: {
+        astronaut(_, { id }) {
+        return fetch(`${apiUrl}/astronauts/${id}`).then(res => res.json());
+        },
+        astronauts() {
+        return fetch(`${apiUrl}/astronauts`).then(res => res.json());
+        }
     }
-  }
 };
 
 const server = new ApolloServer({

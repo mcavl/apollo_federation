@@ -26,29 +26,28 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
-  Astronaut: {
-    async missions(astronaut) {
-      const res = await fetch(`${apiUrl}/missions`);
-      const missions = await res.json();
-
-      return missions.filter(({ crew }) =>
-        crew.includes(parseInt(astronaut.id))
-      );
-    }
-  },
-  Mission: {
-    crew(mission) {
-      return mission.crew.map(id => ({ __typename: "Astronaut", id }));
-    }
-  },
-  Query: {
-    mission(_, { id }) {
-      return fetch(`${apiUrl}/missions/${id}`).then(res => res.json());
+    Astronaut: {
+        async missions(astronaut) {
+            const res = await fetch(`${apiUrl}/missions`);
+            const missions = await res.json();
+            return missions.filter(({crew}) =>
+                crew.includes(parseInt(astronaut.id))
+            );
+        }
     },
-    missions() {
-      return fetch(`${apiUrl}/missions`).then(res => res.json());
+    Mission: {
+        crew(mission) {
+        return mission.crew.map(id => ({ __typename: "Astronaut", id }));
+        }
+    },
+    Query: {
+        mission(_, { id }) {
+        return fetch(`${apiUrl}/missions/${id}`).then(res => res.json());
+        },
+        missions() {
+        return fetch(`${apiUrl}/missions`).then(res => res.json());
+        }
     }
-  }
 };
 
 const server = new ApolloServer({
